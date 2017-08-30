@@ -6,7 +6,7 @@ import (
 )
 
 type Model struct {
-	Test int
+	Hello string
 }
 
 func NewModel(reader io.Reader) (result *Model, err error) {
