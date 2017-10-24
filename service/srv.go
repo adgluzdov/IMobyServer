@@ -4,9 +4,11 @@ import (
 	"github.com/adgluzdov/IMobyServer/application"
 	"github.com/adgluzdov/IMobyServer/model"
 	"github.com/adgluzdov/IMobyServer/data"
+	"log"
 )
 
 func Service(request *application.Request) (*application.Response, error) {
+	log.Print("Tc")
 	model, err := model.NewModel(request.Data())
 	if err!=nil {return application.NewResponse(nil, err)}
 	session, err := data.InitSession();
