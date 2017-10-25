@@ -6,6 +6,6 @@ import (
 )
 
 func main()  {
-	Application := application.Init(application.Routes{"/srv": service.Service,"/verifyToken": service.VerifyIdToken})
+	Application := application.Init(application.Routes{"/srv": service.Service,"/auth": service.Auth})
 	Application.Run()
 }
