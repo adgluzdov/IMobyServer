@@ -6,10 +6,9 @@ import (
 	"firebase.google.com/go/auth"
 	"google.golang.org/api/option"
 	"log"
-	"fmt"
 )
 
-type 	Firebase struct {
+type Firebase struct {
 	client *auth.Client
 }
 
@@ -28,9 +27,10 @@ func (this *Firebase)Init()(err error){
 
 func (this *Firebase)VerifyIDToken(idToken string)(token *auth.Token,err error)  {
 	token, err = this.client.VerifyIDToken(idToken)
-	if err != nil {
-		log.Fatalf("error verifying ID token: %v\n",err)
-	}
-	fmt.Printf("Verified ID token: %v\n", token)
+	return
+}
+
+func (this *Firebase)CustomToken(uid string)(token string,err error)  {
+	token, err = this.client.CustomToken(uid)
 	return
 }
