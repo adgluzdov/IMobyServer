@@ -5,17 +5,30 @@ import (
 	"encoding/json"
 )
 
-type AuthLP struct {
-	Login string
-	Password string
+type AuthRequest struct {
+	IdToken string
 }
 
 type AuthResponse struct {
-	AccessToken string
+	Token Token
 }
 
-func NewAuthLP(reader io.Reader) (result *AuthLP, err error) {
+type Token struct {
+	Accsses_token string
+	Expires_A int64
+	Refresh_token string
+	Expires_R int64
+}
+
+type TokenIMoby struct {
+	Uid string
+	Token Token
+}
+
+func NewAuthRequest(reader io.Reader) (result *AuthRequest, err error) {
 	decoder := json.NewDecoder(reader)
 	err = decoder.Decode(&result)
 	return
 }
+
+

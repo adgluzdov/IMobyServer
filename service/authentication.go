@@ -7,20 +7,10 @@ import (
 )
 
 func Auth(request *application.Request) (response *application.Response,err error) {
-	authRequest, err := model.NewAuthLP(request.Data())
-	if err!=nil {return application.NewResponse(nil, err)}
+	authRequest, err := model.NewAuthRequest(request.Data())
+	if err!=nil {return application.NewResponse(err, nil)}
 	authResponse, err := blogic.Auth(authRequest)
-	//
-	//var auth auth.Firebase
-	//err = auth.Init()
-	//if err!=nil {return application.NewResponse(nil, err)}
-	//token,err := auth.VerifyIDToken(tokenId.Id)
-	//if err!=nil {return application.NewResponse(nil, err)}
-	//if err!=nil {
-	//	response,err = application.NewResponse(bson.M{"result":"invalid"}, err)
-	//} else {
-	//	response,err = application.NewResponse(bson.M{"result":token}, err)
-	//}
+	if err!=nil {return application.NewResponse(err.Error(),nil)}
 	response,err = application.NewResponse(authResponse, err)
 	return
 }

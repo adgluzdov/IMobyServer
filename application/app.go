@@ -18,7 +18,7 @@ func Init(routes Routes) *application {
 	result := new(application)
 	result.routes = routes
 	result.host = ""
-	result.port = "8001"
+	result.port = "8000"
 	return result
 }
 
