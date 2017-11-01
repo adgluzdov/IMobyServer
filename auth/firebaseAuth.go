@@ -8,7 +8,7 @@ import (
 	"log"
 )
 
-type 	Firebase struct {
+type Firebase struct {
 	client *auth.Client
 }
 

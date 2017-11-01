@@ -13,7 +13,7 @@ type MongoDB struct {
 }
 
 func (this *MongoDB)Init()(err error){
-	mongoURI := "127.0.0.1"
+	mongoURI := "mongodb://adgluzdoff:DmgKon490YedAg@cluster-shard-00-00-jz1qh.mongodb.net:27017,cluster-shard-00-01-jz1qh.mongodb.net:27017,cluster-shard-00-02-jz1qh.mongodb.net:27017/vkbot?replicaSet=Cluster-shard-0&authSource=admin"
 	dialInfo, err := mgo.ParseURL(mongoURI)
 	if err != nil {return err }
 	tlsConfig := &tls.Config{}
@@ -27,13 +27,18 @@ func (this *MongoDB)Init()(err error){
 	return nil
 }
 
-func (this *MongoDB)FindUser(Uid string,result interface{})(err error)  {
-	err = this.Session.DB("IMoby").C("Users").Find(bson.M{"uid":Uid}).One(result)
+func (this *MongoDB) FindAccount(Uid string,result interface{})(err error)  {
+	err = this.Session.DB("IMoby").C("Accounts").Find(bson.M{"uid":Uid}).One(result)
 	return
 }
 
-func (this *MongoDB)InsertUser(user model.User)(err error)  {
-	err = this.Session.DB("IMoby").C("Users").Insert(user)
+func (this *MongoDB) FindUid(accsses_token string,result interface{})(err error)  {
+	err = this.Session.DB("IMoby").C("Tokens").Find(bson.M{"token.accsses_token":accsses_token}).One(result)
+	return
+}
+
+func (this *MongoDB) InsertAccount(user model.Account)(err error)  {
+	err = this.Session.DB("IMoby").C("Accounts").Insert(user)
 	return
 }
 

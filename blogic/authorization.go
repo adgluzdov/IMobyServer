@@ -17,15 +17,15 @@ func Auth(request *model.AuthRequest)(response model.AuthResponse,err error)  {
 	if err != nil {return }
 	token, err := auth.VerifyIDToken(request.IdToken)
 	if err != nil {return }
-	//
+
 	var db database.MongoDB
 	db.Init()
 	defer db.Close()
-	var user model.User
-	findError := db.FindUser(token.UID,&user)
+	var account model.Account
+	findError := db.FindAccount(token.UID,&account)
 	if(findError != nil){
-		user.Uid = token.UID
-		db.InsertUser(user)
+		account.Scopes = append(account.Scopes, data.SCOPE_USER)
+		db.InsertAccount(account)
 		return
 	}else {
 		// create tokenIMoby
