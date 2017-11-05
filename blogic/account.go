@@ -14,8 +14,7 @@ type Account_ struct {
 }
 
 func (Account_)GetProfileInfo(request *model.GetProfileInfoRequest)(response model.Account,err error)  {
-	var db database.MongoDB
-	db.Init()
+	db := database.GetMGOInstance()
 	defer db.Close()
 	// Аутентификация
 	var auth Authentication

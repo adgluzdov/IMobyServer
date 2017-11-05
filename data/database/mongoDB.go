@@ -13,6 +13,16 @@ type MongoDB struct {
 	Session *mgo.Session
 }
 
+var MGO *MongoDB
+
+func GetMGOInstance() *MongoDB {
+	if MGO == nil {
+		MGO = &MongoDB{}
+		MGO.Init()
+	}
+	return MGO
+}
+
 func (this *MongoDB)Init()(err error){
 	mongoURI := "mongodb://adgluzdoff:DmgKon490YedAg@cluster-shard-00-00-jz1qh.mongodb.net:27017,cluster-shard-00-01-jz1qh.mongodb.net:27017,cluster-shard-00-02-jz1qh.mongodb.net:27017/vkbot?replicaSet=Cluster-shard-0&authSource=admin"
 	dialInfo, err := mgo.ParseURL(mongoURI)

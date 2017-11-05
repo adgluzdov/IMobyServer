@@ -21,9 +21,7 @@ type Authentication_ struct {
 }
 
 func (this *Authentication_)Authenticate(request model.AuthenticationRequest)(response model.AuthenticationResponse, err error)  {
-	var db database.MongoDB
-	db.Init()
-	defer db.Close()
+	db := database.GetMGOInstance()
 	var token model.TokenIM_DB
 	err = db.FindToken(request.Accsses_token,&token)
 	if(err != nil) {return }
