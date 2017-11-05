@@ -11,5 +11,5 @@ type GetByIdRequest struct{
 }
 
 type GetByIdResponse struct{
-	Market
+	model.Market
 }

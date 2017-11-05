@@ -9,7 +9,7 @@ import (
 
 type CreateRequest struct {
 	model.AuthenticationRequest
-	MarketInfo
+	model.MarketInfo
 }
 
 type CreateResponse struct {

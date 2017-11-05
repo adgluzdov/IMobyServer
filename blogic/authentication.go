@@ -29,7 +29,7 @@ func (this *Authentication_)Authenticate(request model.AuthenticationRequest)(re
 		err = errors.New("Token has expired.")
 	}
 	// token -> response
-	response.Id = token.UserId
+	response.Id = token.AccountId
 	return
 }
 

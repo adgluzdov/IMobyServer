@@ -28,21 +28,19 @@ func (this *Auth_)Authorize(request *model.AuthRequest)(response model.AuthRespo
 	}
 	UID := tokenFB.UID
 
-	var db database.MongoDB
-	db.Init()
-	defer db.Close()
+	db := database.GetMGOInstance()
 	var account model.Account
 	findError := db.FindAccount(UID,&account)
 	if(findError != nil){
 		// create User
 		account.Uid = tokenFB.UID
-		account.Scope = data.SCOPE_USER
+		account.Info.Scope = data.SCOPE_USER
 		db.InsertAccount(account)
 		return
 	}else {
 		// create tokenIM_DB
 		var tokenIM_DB model.TokenIM_DB
-		tokenIM_DB.UserId = account.Id
+		tokenIM_DB.AccountId = account.Id
 		tokenIM_DB.Token.Accsses_token = randToken()
 		tokenIM_DB.Token.Refresh_token = randToken()
 		tokenIM_DB.Token.Expires_A = time.Now().Unix() + data.Expires_A

@@ -9,5 +9,5 @@ type SearchRequest struct{
 }
 
 type SearchResponse struct{
-	Markets []Market
+	Markets []model.Market
 }

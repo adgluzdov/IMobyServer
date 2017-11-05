@@ -15,8 +15,8 @@ type AuthResponse struct {
 }
 
 type TokenIM_DB struct {
-	UserId bson.ObjectId
-	Token TokenIM
+	AccountId bson.ObjectId
+	Token     TokenIM
 }
 
 type TokenIM struct {

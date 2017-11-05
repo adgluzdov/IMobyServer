@@ -19,9 +19,7 @@ type Market_ struct {
 }
 
 func (Market_)Create(request *market.CreateRequest)(response market.CreateResponse,err error)  {
-	var db database.MongoDB
-	db.Init()
-	defer db.Close()
+	db := database.GetMGOInstance()
 	// Аутентификация
 	var auth Authentication
 	auth = new(Authentication_)
@@ -31,12 +29,12 @@ func (Market_)Create(request *market.CreateRequest)(response market.CreateRespon
 	var account model.Account
 	err = db.FindAccountById(authResponse.Id,&account)
 	if(err != nil){return }
-	if(account.Scope != data.SCOPE_MARKETER) {
+	if(account.Info.Scope != data.SCOPE_MARKETER) {
 		err = errors.New("Account doesn't have scope")
 		return 
 	}
 	// Создание Market
-	newMarket := market.Market{Id_Marketer:account.Id,MarketInfo:request.MarketInfo}
+	newMarket := model.Market{Id_Marketer:account.Id,Info:request.MarketInfo}
 	newMarket.Id, err = db.CreateMarket(newMarket)
 	if(err != nil){return }
 	response.Id = newMarket.Id

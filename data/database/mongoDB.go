@@ -6,7 +6,6 @@ import (
 	"net"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/adgluzdov/IMobyServer/model"
-	"github.com/adgluzdov/IMobyServer/model/market"
 )
 
 type MongoDB struct {
@@ -66,7 +65,7 @@ func (this *MongoDB) InsertAccount(user model.Account)(err error)  {
 	return
 }
 
-func (this *MongoDB) CreateMarket(market market.Market) (bson.ObjectId,error) {
+func (this *MongoDB) CreateMarket(market model.Market) (bson.ObjectId,error) {
 	market.Id = bson.NewObjectId()
 	err := this.Session.DB("IMoby").C("Market").Insert(market)
 	return market.Id,err
