@@ -20,10 +20,9 @@ func (Account_)GetProfileInfo(request *model.GetProfileInfoRequest)(response mod
 	// Аутентификация
 	var auth Authentication
 	auth = new(Authentication_)
-	authRequest := model.AutenticationRequest{request.Accsses_token}
-	authResponse,err := auth.Authenticate(authRequest)
+	authResponse,err := auth.Authenticate(request.AuthenticationRequest)
 	if(err != nil){return }
 	// Поиск Аккаунта
-	err = db.FindAccount(authResponse.Uid,&response)
+	err = db.FindAccountById(authResponse.Id,&response)
 	return
 }

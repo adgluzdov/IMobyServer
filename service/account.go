@@ -11,8 +11,8 @@ func GetProfileInfo(request *application.Request) (response *application.Respons
 	if err!=nil {return application.NewResponse(err, nil)}
 	var account blogic.Account
 	account = new(blogic.Account_)
-	modelAccount, err := account.GetProfileInfo(profileInfoRequest)
+	profileInfoResponse, err := account.GetProfileInfo(profileInfoRequest)
 	if err!=nil {return application.NewResponse(err.Error(),nil)}
-	response,err = application.NewResponse(modelAccount, err)
+	response,err = application.NewResponse(profileInfoResponse, err)
 	return
 }

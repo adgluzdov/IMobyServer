@@ -6,6 +6,7 @@ import (
 	"net"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/adgluzdov/IMobyServer/model"
+	"github.com/adgluzdov/IMobyServer/model/market"
 )
 
 type MongoDB struct {
@@ -27,8 +28,15 @@ func (this *MongoDB)Init()(err error){
 	return nil
 }
 
-func (this *MongoDB) FindAccount(Uid string,result interface{})(err error)  {
-	err = this.Session.DB("IMoby").C("Accounts").Find(bson.M{"uid":Uid}).One(result)
+func (this *MongoDB) FindAccount(uid string,result interface{})(err error)  {
+	query := bson.M{"uid":uid}
+	err = this.Session.DB("IMoby").C("Accounts").Find(query).One(result)
+	return
+}
+
+func (this *MongoDB) FindAccountById(Id bson.ObjectId,result interface{})(err error)  {
+	query := bson.M{"_id":Id}
+	err = this.Session.DB("IMoby").C("Accounts").Find(query).One(result)
 	return
 }
 
@@ -37,7 +45,7 @@ func (this *MongoDB) FindToken(accsses_token string,result interface{})(err erro
 	return
 }
 
-func (this *MongoDB) DeleteToken(Id bson.ObjectId)(err error)  {
+func (this *MongoDB) DeleteTokenById(Id string)(err error)  {
 	query := bson.M{"_id":Id}
 	err = this.Session.DB("IMoby").C("Tokens").Remove(query)
 	return
@@ -47,6 +55,13 @@ func (this *MongoDB) InsertAccount(user model.Account)(err error)  {
 	err = this.Session.DB("IMoby").C("Accounts").Insert(user)
 	return
 }
+
+func (this *MongoDB) CreateMarket(market market.Market) (bson.ObjectId,error) {
+	market.Id = bson.NewObjectId()
+	err := this.Session.DB("IMoby").C("Market").Insert(market)
+	return market.Id,err
+}
+
 
 func (this *MongoDB) InsertTokenIM(token model.TokenIM_DB)(err error)  {
 	err = this.Session.DB("IMoby").C("Tokens").Insert(token)

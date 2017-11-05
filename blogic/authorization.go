@@ -20,7 +20,7 @@ func (this *Auth_)Authorize(request *model.AuthRequest)(response model.AuthRespo
 	//idToken -> tokenFB
 	var auth AuthenticationFB
 	auth = new(AuthenticationFB_)
-	tokenFB, err := auth.Authenticate(model.AutenticationFBRequest{request.IdToken})
+	tokenFB, err := auth.Authenticate(model.AuthenticationFBRequest{request.IdToken})
 	if err != nil {return }
 	if(time.Now().Unix() > tokenFB.Expires) {
 		err = errors.New("Expired token")
@@ -42,7 +42,7 @@ func (this *Auth_)Authorize(request *model.AuthRequest)(response model.AuthRespo
 	}else {
 		// create tokenIM_DB
 		var tokenIM_DB model.TokenIM_DB
-		tokenIM_DB.Uid = tokenFB.UID
+		tokenIM_DB.UserId = account.Id
 		tokenIM_DB.Token.Accsses_token = randToken()
 		tokenIM_DB.Token.Refresh_token = randToken()
 		tokenIM_DB.Token.Expires_A = time.Now().Unix() + data.Expires_A

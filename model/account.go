@@ -3,15 +3,17 @@ package model
 import (
 	"io"
 	"encoding/json"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type Account struct {
+	Id bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Uid string
 	Scope int
 }
 
 type GetProfileInfoRequest struct {
-	Accsses_token string
+	AuthenticationRequest
 }
 
 type GetProfileInfoResponse struct {
