@@ -6,7 +6,7 @@ import (
 )
 
 type Account struct {
-	Scopes []string
+	Scope int
 }
 
 type ProfileInfoRequest struct {

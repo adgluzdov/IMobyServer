@@ -2,44 +2,56 @@ package blogic
 
 import (
 	"github.com/adgluzdov/IMobyServer/model"
+	"time"
+	"github.com/adgluzdov/IMobyServer/data"
+	"fmt"
+	"errors"
+	"math/rand"
 	"github.com/adgluzdov/IMobyServer/auth"
 	"github.com/adgluzdov/IMobyServer/data/database"
-	"fmt"
-	"math/rand"
-	"github.com/adgluzdov/IMobyServer/data"
-	"time"
 )
 
-func Auth(request *model.AuthRequest)(response model.AuthResponse,err error)  {
-	//idToken -> token
+type Auth interface {
+	Authorize(request *model.AuthRequest)(response model.AuthResponse,err error)
+}
+
+type Auth_ struct {}
+
+func (this *Auth_)Authorize(request *model.AuthRequest)(response model.AuthResponse,err error)  {
+	//idToken -> tokenFB
 	var auth auth.Firebase
 	err = auth.Init()
 	if err != nil {return }
-	token, err := auth.VerifyIDToken(request.IdToken)
+	tokenFB, err := auth.VerifyIDToken(request.IdToken)
 	if err != nil {return }
+	if(time.Now().Unix() > tokenFB.Expires) {
+		err = errors.New("Expired token")
+		return
+	}
+	UID := tokenFB.UID
 
 	var db database.MongoDB
 	db.Init()
 	defer db.Close()
 	var account model.Account
-	findError := db.FindAccount(token.UID,&account)
+	findError := db.FindAccount(UID,&account)
 	if(findError != nil){
-		account.Scopes = append(account.Scopes, data.SCOPE_USER)
+		account.Scope = data.SCOPE_USER
 		db.InsertAccount(account)
 		return
 	}else {
-		// create tokenIMoby
-		var tokenIMoby model.TokenIMoby
-		tokenIMoby.Uid = token.UID
-		tokenIMoby.Token.Accsses_token = randToken()
-		tokenIMoby.Token.Refresh_token = randToken()
-		tokenIMoby.Token.Expires_A = time.Now().Unix() + data.Expires_A
-		tokenIMoby.Token.Expires_R = time.Now().Unix() + data.Expires_R
-		// insert tokenIMoby into DB
-		err = db.InsertTokenIMoby(tokenIMoby)
+		// create tokenIM_DB
+		var tokenIM_DB model.TokenIM_DB
+		tokenIM_DB.Uid = tokenFB.UID
+		tokenIM_DB.Token.Accsses_token = randToken()
+		tokenIM_DB.Token.Refresh_token = randToken()
+		tokenIM_DB.Token.Expires_A = time.Now().Unix() + data.Expires_A
+		tokenIM_DB.Token.Expires_R = time.Now().Unix() + data.Expires_R
+		// insert tokenIM_DB into DB
+		err = db.InsertTokenIM(tokenIM_DB)
 		if err!=nil {return }
-		// tokenIMoby -> AuthResponse
-		response.Token = tokenIMoby.Token
+		// tokenIM_DB -> AuthResponse
+		response.Token = tokenIM_DB.Token
 		return
 	}
 	return

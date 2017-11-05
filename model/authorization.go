@@ -10,19 +10,19 @@ type AuthRequest struct {
 }
 
 type AuthResponse struct {
-	Token Token
+	Token TokenIM
 }
 
-type Token struct {
+type TokenIM_DB struct {
+	Uid   string
+	Token TokenIM
+}
+
+type TokenIM struct {
 	Accsses_token string
 	Expires_A int64
 	Refresh_token string
 	Expires_R int64
-}
-
-type TokenIMoby struct {
-	Uid string
-	Token Token
 }
 
 func NewAuthRequest(reader io.Reader) (result *AuthRequest, err error) {

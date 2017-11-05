@@ -42,7 +42,7 @@ func (this *MongoDB) InsertAccount(user model.Account)(err error)  {
 	return
 }
 
-func (this *MongoDB)InsertTokenIMoby(token model.TokenIMoby)(err error)  {
+func (this *MongoDB) InsertTokenIM(token model.TokenIM_DB)(err error)  {
 	err = this.Session.DB("IMoby").C("Tokens").Insert(token)
 	return
 }
