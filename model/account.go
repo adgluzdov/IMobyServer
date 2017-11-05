@@ -6,6 +6,7 @@ import (
 )
 
 type Account struct {
+	Uid string
 	Scope int
 }
 

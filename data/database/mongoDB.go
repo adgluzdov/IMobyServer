@@ -32,8 +32,14 @@ func (this *MongoDB) FindAccount(Uid string,result interface{})(err error)  {
 	return
 }
 
-func (this *MongoDB) FindUid(accsses_token string,result interface{})(err error)  {
+func (this *MongoDB) FindToken(accsses_token string,result interface{})(err error)  {
 	err = this.Session.DB("IMoby").C("Tokens").Find(bson.M{"token.accsses_token":accsses_token}).One(result)
+	return
+}
+
+func (this *MongoDB) DeleteToken(Id bson.ObjectId)(err error)  {
+	query := bson.M{"_id":Id}
+	err = this.Session.DB("IMoby").C("Tokens").Remove(query)
 	return
 }
 

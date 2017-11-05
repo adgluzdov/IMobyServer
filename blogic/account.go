@@ -3,7 +3,6 @@ package blogic
 import (
 	"github.com/adgluzdov/IMobyServer/model"
 	"github.com/adgluzdov/IMobyServer/data/database"
-	"github.com/adgluzdov/IMobyServer/auth"
 )
 
 func GetProfileInfo(request *model.ProfileInfoRequest)(response model.Account,err error)  {
@@ -11,9 +10,11 @@ func GetProfileInfo(request *model.ProfileInfoRequest)(response model.Account,er
 	db.Init()
 	defer db.Close()
 	// Аутентификация
-	var authRequest model.IMobyAuthRequest
-	authRequest.Init(request.Accsses_token)
-	authResponse,err := auth.AuthenticationIM(db,authRequest)
+	var auth Authentication
+	auth = new(Authentication_)
+	authRequest := model.AutenticationRequest{request.Accsses_token}
+	authResponse := model.AutenticationResponse{}
+	authResponse,err = auth.Authenticate(authRequest)
 	if(err != nil){return }
 	// Поиск Аккаунта
 	err = db.FindAccount(authResponse.Uid,&response)

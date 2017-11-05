@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"errors"
 	"math/rand"
-	"github.com/adgluzdov/IMobyServer/auth"
 	"github.com/adgluzdov/IMobyServer/data/database"
 )
 
@@ -19,10 +18,9 @@ type Auth_ struct {}
 
 func (this *Auth_)Authorize(request *model.AuthRequest)(response model.AuthResponse,err error)  {
 	//idToken -> tokenFB
-	var auth auth.Firebase
-	err = auth.Init()
-	if err != nil {return }
-	tokenFB, err := auth.VerifyIDToken(request.IdToken)
+	var auth AuthenticationFB
+	auth = new(AuthenticationFB_)
+	tokenFB, err := auth.Authenticate(model.AutenticationFBRequest{request.IdToken})
 	if err != nil {return }
 	if(time.Now().Unix() > tokenFB.Expires) {
 		err = errors.New("Expired token")
@@ -36,6 +34,8 @@ func (this *Auth_)Authorize(request *model.AuthRequest)(response model.AuthRespo
 	var account model.Account
 	findError := db.FindAccount(UID,&account)
 	if(findError != nil){
+		// create User
+		account.Uid = tokenFB.UID
 		account.Scope = data.SCOPE_USER
 		db.InsertAccount(account)
 		return

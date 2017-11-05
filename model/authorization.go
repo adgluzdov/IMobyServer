@@ -3,6 +3,7 @@ package model
 import (
 	"io"
 	"encoding/json"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type AuthRequest struct {
@@ -14,6 +15,7 @@ type AuthResponse struct {
 }
 
 type TokenIM_DB struct {
+	Id bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Uid   string
 	Token TokenIM
 }
@@ -30,5 +32,4 @@ func NewAuthRequest(reader io.Reader) (result *AuthRequest, err error) {
 	err = decoder.Decode(&result)
 	return
 }
-
 
