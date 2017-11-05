@@ -5,7 +5,15 @@ import (
 	"github.com/adgluzdov/IMobyServer/data/database"
 )
 
-func GetProfileInfo(request *model.ProfileInfoRequest)(response model.Account,err error)  {
+type Account interface {
+	GetProfileInfo(request *model.GetProfileInfoRequest)(response model.Account,err error)
+}
+
+type Account_ struct {
+
+}
+
+func (Account_)GetProfileInfo(request *model.GetProfileInfoRequest)(response model.Account,err error)  {
 	var db database.MongoDB
 	db.Init()
 	defer db.Close()
@@ -13,8 +21,7 @@ func GetProfileInfo(request *model.ProfileInfoRequest)(response model.Account,er
 	var auth Authentication
 	auth = new(Authentication_)
 	authRequest := model.AutenticationRequest{request.Accsses_token}
-	authResponse := model.AutenticationResponse{}
-	authResponse,err = auth.Authenticate(authRequest)
+	authResponse,err := auth.Authenticate(authRequest)
 	if(err != nil){return }
 	// Поиск Аккаунта
 	err = db.FindAccount(authResponse.Uid,&response)

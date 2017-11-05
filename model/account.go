@@ -10,11 +10,15 @@ type Account struct {
 	Scope int
 }
 
-type ProfileInfoRequest struct {
+type GetProfileInfoRequest struct {
 	Accsses_token string
 }
 
-func NewProfileInfoRequest(reader io.Reader) (result *ProfileInfoRequest, err error) {
+type GetProfileInfoResponse struct {
+	Account
+}
+
+func NewProfileInfoRequest(reader io.Reader) (result *GetProfileInfoRequest, err error) {
 	decoder := json.NewDecoder(reader)
 	err = decoder.Decode(&result)
 	return
