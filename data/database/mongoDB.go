@@ -49,6 +49,12 @@ func (this *MongoDB) FindAccountById(Id bson.ObjectId,result interface{})(err er
 	return
 }
 
+func (this *MongoDB) FindMarketById(Id bson.ObjectId,market *model.Market)(err error)  {
+	query := bson.M{"_id":Id}
+	err = this.Session.DB("IMoby").C("Markets").Find(query).One(market)
+	return
+}
+
 func (this *MongoDB) FindToken(accsses_token string,result interface{})(err error)  {
 	err = this.Session.DB("IMoby").C("Tokens").Find(bson.M{"token.accsses_token":accsses_token}).One(result)
 	return
@@ -67,7 +73,7 @@ func (this *MongoDB) InsertAccount(user model.Account)(err error)  {
 
 func (this *MongoDB) CreateMarket(market model.Market) (bson.ObjectId,error) {
 	market.Id = bson.NewObjectId()
-	err := this.Session.DB("IMoby").C("Market").Insert(market)
+	err := this.Session.DB("IMoby").C("Markets").Insert(market)
 	return market.Id,err
 }
 
