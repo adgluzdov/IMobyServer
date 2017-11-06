@@ -1,28 +1,23 @@
-package blogic
+package market
 
 import (
 	"github.com/adgluzdov/IMobyServer/model/market"
-	"github.com/adgluzdov/IMobyServer/data/database"
 	"github.com/adgluzdov/IMobyServer/model"
 	"github.com/adgluzdov/IMobyServer/data"
 	"errors"
+	"github.com/adgluzdov/IMobyServer/data/database"
+	"github.com/adgluzdov/IMobyServer/blogic"
 )
 
-type Market interface {
-	Create(request *market.CreateRequest)(response market.CreateResponse,err error)
-	GetById(request *market.GetByIdRequest)(response market.GetByIdResponse,err error)
-	Search(request *market.SearchRequest)(response market.SearchResponse,err error)
-}
-
-type Market_ struct {
+type Create_ struct {
 
 }
 
-func (Market_)Create(request *market.CreateRequest)(response market.CreateResponse,err error)  {
+func (Create_)Go(request *market.CreateRequest)(response market.CreateResponse,err error)  {
 	db := database.GetMGOInstance()
 	// Аутентификация
-	var auth Authentication
-	auth = new(Authentication_)
+	var auth blogic.Authentication
+	auth = new(blogic.Authentication_)
 	authResponse,err := auth.Authenticate(request.AuthenticationRequest)
 	if(err != nil){return }
 	// Проверка Scope == MARKETER
@@ -31,20 +26,12 @@ func (Market_)Create(request *market.CreateRequest)(response market.CreateRespon
 	if(err != nil){return }
 	if(account.Info.Scope != data.SCOPE_MARKETER) {
 		err = errors.New("Account doesn't have scope")
-		return 
+		return
 	}
 	// Создание Market
 	newMarket := model.Market{Id_Marketer:account.Id,Info:request.MarketInfo}
 	newMarket.Id, err = db.CreateMarket(newMarket)
 	if(err != nil){return }
 	response.Id = newMarket.Id
-	return
-}
-
-func (Market_)GetById(request *market.GetByIdRequest)(response market.GetByIdResponse,err error)  {
-	return
-}
-
-func (Market_)Search(request *market.SearchRequest)(response market.SearchResponse,err error) {
 	return
 }

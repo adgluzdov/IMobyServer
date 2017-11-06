@@ -1,23 +1,20 @@
-package blogic
+package account
 
 import (
 	"github.com/adgluzdov/IMobyServer/model/account"
 	"github.com/adgluzdov/IMobyServer/data/database"
+	"github.com/adgluzdov/IMobyServer/blogic"
 )
 
-type Account interface {
-	GetProfileInfo(request *account.GetProfileInfoRequest)(response account.GetProfileInfoResponse,err error)
-}
-
-type Account_ struct {
+type GetProfileInfo_ struct {
 
 }
 
-func (Account_)GetProfileInfo(request *account.GetProfileInfoRequest)(response account.GetProfileInfoResponse,err error)  {
+func (GetProfileInfo_)Go(request *account.GetProfileInfoRequest)(response account.GetProfileInfoResponse,err error)  {
 	db := database.GetMGOInstance()
 	// Аутентификация
-	var auth Authentication
-	auth = new(Authentication_)
+	var auth blogic.Authentication
+	auth = new(blogic.Authentication_)
 	authResponse,err := auth.Authenticate(request.AuthenticationRequest)
 	if(err != nil){return }
 	// Поиск Аккаунта
