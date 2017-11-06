@@ -8,6 +8,11 @@ import (
 )
 
 func main()  {
-	Application := application.Init(application.Routes{"/auth": service.Auth,"/account.getProfileInfo": account.GetProfileInfo,"/market.create": market.Create})
+	Application := application.Init(application.Routes{
+		"/auth": service.Auth,
+		"/account.getProfileInfo": account.GetProfileInfo,
+		"/market.create": market.Create,
+		"/market.getById": market.GetById,
+	})
 	Application.Run()
 }
