@@ -9,6 +9,7 @@ type Market struct {
 	Id_Marketer bson.ObjectId
 	Info MarketInfo
 }
+
 type MarketInfo struct {
 	Name string
 	Description string

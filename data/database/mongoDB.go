@@ -12,14 +12,14 @@ type MongoDB struct {
 	Session *mgo.Session
 }
 
-var MGO *MongoDB
+var database *MongoDB
 
-func GetMGOInstance() *MongoDB {
-	if MGO == nil {
-		MGO = &MongoDB{}
-		MGO.Init()
+func GetMongoDB() *MongoDB {
+	if database == nil {
+		database = &MongoDB{}
+		database.Init()
 	}
-	return MGO
+	return database
 }
 
 func (this *MongoDB)Init()(err error){
@@ -37,20 +37,31 @@ func (this *MongoDB)Init()(err error){
 	return nil
 }
 
-func (this *MongoDB) FindAccount(uid string,result interface{})(err error)  {
+func (this *MongoDB) FindAccount(uid string,account *model.Account)(err error)  {
 	query := bson.M{"uid":uid}
-	err = this.Session.DB("IMoby").C("Accounts").Find(query).One(result)
+	err = this.Session.DB("IMoby").C("Accounts").Find(query).One(account)
 	return
 }
 
-func (this *MongoDB) FindAccountById(Id bson.ObjectId,result interface{})(err error)  {
+func (this *MongoDB) FindAccountById(Id bson.ObjectId,account *model.Account)(err error)  {
 	query := bson.M{"_id":Id}
-	err = this.Session.DB("IMoby").C("Accounts").Find(query).One(result)
+	err = this.Session.DB("IMoby").C("Accounts").Find(query).One(account)
+	return
+}
+
+func (this *MongoDB) FindMarketById(Id bson.ObjectId,market *model.Market)(err error)  {
+	query := bson.M{"_id":Id}
+	err = this.Session.DB("IMoby").C("Markets").Find(query).One(market)
+	return
+}
+
+func (this *MongoDB) FindMarketAll(markets interface{})(err error)  {
+	err = this.Session.DB("IMoby").C("Markets").Find(nil).All(markets)
 	return
 }
 
 func (this *MongoDB) FindToken(accsses_token string,result interface{})(err error)  {
-	err = this.Session.DB("IMoby").C("Tokens").Find(bson.M{"token.accsses_token":accsses_token}).One(result)
+	err = this.Session.DB("IMoby").C("Tokens").Find(bson.M{"info.accsses_token":accsses_token}).One(result)
 	return
 }
 
@@ -67,12 +78,12 @@ func (this *MongoDB) InsertAccount(user model.Account)(err error)  {
 
 func (this *MongoDB) CreateMarket(market model.Market) (bson.ObjectId,error) {
 	market.Id = bson.NewObjectId()
-	err := this.Session.DB("IMoby").C("Market").Insert(market)
+	err := this.Session.DB("IMoby").C("Markets").Insert(market)
 	return market.Id,err
 }
 
 
-func (this *MongoDB) InsertTokenIM(token model.TokenIM_DB)(err error)  {
+func (this *MongoDB) InsertToken(token model.Token)(err error)  {
 	err = this.Session.DB("IMoby").C("Tokens").Insert(token)
 	return
 }

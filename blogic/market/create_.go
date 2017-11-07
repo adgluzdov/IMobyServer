@@ -14,7 +14,7 @@ type Create_ struct {
 }
 
 func (Create_)Go(request *market.CreateRequest)(response market.CreateResponse,err error)  {
-	db := database.GetMGOInstance()
+	db := database.GetMongoDB()
 	// Аутентификация
 	var auth blogic.Authentication
 	auth = new(blogic.Authentication_)

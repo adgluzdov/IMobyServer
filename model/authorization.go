@@ -3,30 +3,17 @@ package model
 import (
 	"io"
 	"encoding/json"
-	"gopkg.in/mgo.v2/bson"
 )
 
-type AuthRequest struct {
+type AuthorizationRequest struct {
 	IdToken string
 }
 
-type AuthResponse struct {
-	Token TokenIM
+type AuthorizationResponse struct {
+	Token TokenInfo
 }
 
-type TokenIM_DB struct {
-	AccountId bson.ObjectId
-	Token     TokenIM
-}
-
-type TokenIM struct {
-	Accsses_token string
-	Expires_A int64
-	Refresh_token string
-	Expires_R int64
-}
-
-func NewAuthRequest(reader io.Reader) (result *AuthRequest, err error) {
+func NewAuthorizationRequest(reader io.Reader) (result *AuthorizationRequest, err error) {
 	decoder := json.NewDecoder(reader)
 	err = decoder.Decode(&result)
 	return
